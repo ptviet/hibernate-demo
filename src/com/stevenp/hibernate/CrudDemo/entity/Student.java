@@ -1,4 +1,4 @@
-package com.stevenp.hibernate.entity;
+package com.stevenp.hibernate.CrudDemo.entity;
 
 import javax.persistence.*;
 

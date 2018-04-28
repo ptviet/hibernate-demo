@@ -1,16 +1,13 @@
-package com.stevenp.hibernate.demo;
+package com.stevenp.hibernate.CrudDemo;
 
-import com.stevenp.hibernate.entity.Student;
-import org.hibernate.HibernateException;
+import com.stevenp.hibernate.CrudDemo.entity.Student;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.HibernateException;
 
-import java.util.List;
 
-
-public class QueryStudent {
-
+public class PrimaryKey {
     private static final SessionFactory factory;
 
     //create session factory
@@ -35,21 +32,26 @@ public class QueryStudent {
             //create session
             Session session = getSession();
 
+            // create 3 student objects
+            System.out.println("\nCreating 3 student objects...");
+            Student student1 = new Student("John",
+                    "Doe",
+                    "johndoe@website.com");
+            Student student2 = new Student("Marry",
+                    "Public",
+                    "marrypublic@website.com");
+            Student student3 = new Student("Bonita",
+                    "Applebum",
+                    "bonitaapplebum@website.com");
+
             // start the transaction
             session.beginTransaction();
 
-            // query students
-            List<Student> studentList = session.createQuery("from Student").list();
-
-            // display the students
-            displayStudents(studentList);
-
-            // query students: lastName='Doe'
-            studentList = session.createQuery("from Student s where s.lastName='Doe'").list();
-
-            // display the students
-            System.out.println("\nStudents who have last name of Doe: ");
-            displayStudents(studentList);
+            // save the student object
+            System.out.println("Saving the students...");
+            session.save(student1);
+            session.save(student2);
+            session.save(student3);
 
             // commit transaction
             session.getTransaction().commit();
@@ -65,11 +67,4 @@ public class QueryStudent {
 
     }
 
-    private static void displayStudents(List<Student> studentList) {
-        System.out.println("\nList of students: \n");
-        for(Student student: studentList) {
-            System.out.println(student);
-        }
-        System.out.println();
-    }
 }

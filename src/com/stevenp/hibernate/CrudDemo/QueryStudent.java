@@ -1,13 +1,15 @@
-package com.stevenp.hibernate.demo;
+package com.stevenp.hibernate.CrudDemo;
 
-import com.stevenp.hibernate.entity.Student;
+import com.stevenp.hibernate.CrudDemo.entity.Student;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import java.util.List;
 
-public class UpdateStudent {
+
+public class QueryStudent {
 
     private static final SessionFactory factory;
 
@@ -30,35 +32,44 @@ public class UpdateStudent {
     public static void main(String[] args) {
 
         try {
-
-            int tempStuId = 1;
-
             //create session
             Session session = getSession();
 
             // start the transaction
             session.beginTransaction();
 
-            // retrieve student based on the id: primary key
-            System.out.println("\nGetting student with id: " + tempStuId);
-            Student myStudent = session.get(Student.class, tempStuId);
-            System.out.println("Student retrieved: " + myStudent);
+            // query students
+            List<Student> studentList = session.createQuery("from Student").list();
 
-            // update the student info
-            System.out.println("\nUpdating the student...");
-            myStudent.setFirstName("Scooby");
+            // display the students
+            displayStudents(studentList);
 
-            // commit the transaction
+            // query students: lastName='Doe'
+            studentList = session.createQuery("from Student s where s.lastName='Doe'").list();
+
+            // display the students
+            System.out.println("\nStudents who have last name of Doe: ");
+            displayStudents(studentList);
+
+            // commit transaction
             session.getTransaction().commit();
+            System.out.println("\nDone.\n");
 
             // close session
             session.close();
 
-            System.out.println("\nDone.\n");
-
         } finally {
+
             factory.close();
         }
 
+    }
+
+    private static void displayStudents(List<Student> studentList) {
+        System.out.println("\nList of students: \n");
+        for(Student student: studentList) {
+            System.out.println(student);
+        }
+        System.out.println();
     }
 }

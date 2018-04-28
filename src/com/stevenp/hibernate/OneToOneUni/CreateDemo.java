@@ -1,8 +1,7 @@
 package com.stevenp.hibernate.OneToOneUni;
 
-import com.stevenp.hibernate.entity.Instructor;
-import com.stevenp.hibernate.entity.InstructorDetail;
-import com.stevenp.hibernate.entity.Student;
+import com.stevenp.hibernate.OneToOneUni.entity.Instructor;
+import com.stevenp.hibernate.OneToOneUni.entity.InstructorDetail;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

@@ -1,14 +1,13 @@
-package com.stevenp.hibernate.OneToOneUni;
+package com.stevenp.hibernate.OneToOneBi;
 
-import com.stevenp.hibernate.OneToOneUni.entity.Instructor;
-import com.stevenp.hibernate.OneToOneUni.entity.InstructorDetail;
+import com.stevenp.hibernate.OneToOneBi.entity.*;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 
-public class DeleteDemo {
+public class GetInstructorDetail {
 
     private static final SessionFactory factory;
 
@@ -39,20 +38,17 @@ public class DeleteDemo {
             // start the transaction
             session.beginTransaction();
 
-            // get instructor by primary key: id
-            int id = 3;
-            Instructor instructor = session.get(Instructor.class, id);
+            // get the instructor detail object
+            int id = 4;
+            InstructorDetail instructorDetail = session.get(InstructorDetail.class, id);
 
-            // delete the instructor
-            if (instructor != null) {
-                System.out.println("\nFound: " + instructor);
-                System.out.println("\nDeleting...");
-                session.delete(instructor);
-                // instructor detail also deleted
 
-            } else {
-                System.out.println("\nNo result found.");
-            }
+            // print the instructor detail
+            System.out.println("\nInstructor Detail: " + instructorDetail);
+
+
+            // print the associated instructor
+            System.out.println("\nAssociated Instructor: " + instructorDetail.getInstructor());
 
             // commit transaction
             session.getTransaction().commit();
@@ -62,6 +58,8 @@ public class DeleteDemo {
             session.close();
 
 
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             factory.close();
         }

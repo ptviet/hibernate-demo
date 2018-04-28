@@ -1,13 +1,14 @@
-package com.stevenp.hibernate.demo;
+package com.stevenp.hibernate.CrudDemo;
 
-import com.stevenp.hibernate.entity.Student;
+import com.stevenp.hibernate.CrudDemo.entity.Student;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.HibernateException;
 
 
-public class PrimaryKey {
+public class UpdateStudent {
+
     private static final SessionFactory factory;
 
     //create session factory
@@ -29,42 +30,35 @@ public class PrimaryKey {
     public static void main(String[] args) {
 
         try {
+
+            int tempStuId = 1;
+
             //create session
             Session session = getSession();
-
-            // create 3 student objects
-            System.out.println("\nCreating 3 student objects...");
-            Student student1 = new Student("John",
-                    "Doe",
-                    "johndoe@website.com");
-            Student student2 = new Student("Marry",
-                    "Public",
-                    "marrypublic@website.com");
-            Student student3 = new Student("Bonita",
-                    "Applebum",
-                    "bonitaapplebum@website.com");
 
             // start the transaction
             session.beginTransaction();
 
-            // save the student object
-            System.out.println("Saving the students...");
-            session.save(student1);
-            session.save(student2);
-            session.save(student3);
+            // retrieve student based on the id: primary key
+            System.out.println("\nGetting student with id: " + tempStuId);
+            Student myStudent = session.get(Student.class, tempStuId);
+            System.out.println("Student retrieved: " + myStudent);
 
-            // commit transaction
+            // update the student info
+            System.out.println("\nUpdating the student...");
+            myStudent.setFirstName("Scooby");
+
+            // commit the transaction
             session.getTransaction().commit();
-            System.out.println("\nDone.\n");
 
             // close session
             session.close();
 
-        } finally {
+            System.out.println("\nDone.\n");
 
+        } finally {
             factory.close();
         }
 
     }
-
 }
