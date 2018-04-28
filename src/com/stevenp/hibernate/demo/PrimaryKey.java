@@ -7,8 +7,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.HibernateException;
 
 
-public class CreateStudent {
-
+public class PrimaryKey {
     private static final SessionFactory factory;
 
     //create session factory
@@ -33,18 +32,26 @@ public class CreateStudent {
             //create session
             Session session = getSession();
 
-            // create a student object
-            System.out.println("\nCreating new student object...");
-            Student student = new Student("Paul",
-                                            "Wall",
-                                        "paulwall@website.com");
+            // create 3 student objects
+            System.out.println("\nCreating 3 student objects...");
+            Student student1 = new Student("John",
+                    "Doe",
+                    "johndoe@website.com");
+            Student student2 = new Student("Marry",
+                    "Public",
+                    "marrypublic@website.com");
+            Student student3 = new Student("Bonita",
+                    "Applebum",
+                    "bonitaapplebum@website.com");
 
             // start the transaction
             session.beginTransaction();
 
             // save the student object
-            System.out.println("Saving the student...");
-            session.save(student);
+            System.out.println("Saving the students...");
+            session.save(student1);
+            session.save(student2);
+            session.save(student3);
 
             // commit transaction
             session.getTransaction().commit();
@@ -53,10 +60,11 @@ public class CreateStudent {
             // close session
             session.close();
 
-
         } finally {
+
             factory.close();
         }
 
     }
+
 }

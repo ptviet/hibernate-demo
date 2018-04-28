@@ -1,13 +1,13 @@
 package com.stevenp.hibernate.demo;
 
 import com.stevenp.hibernate.entity.Student;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.HibernateException;
 
 
-public class CreateStudent {
+public class UpdateStudent {
 
     private static final SessionFactory factory;
 
@@ -30,29 +30,31 @@ public class CreateStudent {
     public static void main(String[] args) {
 
         try {
+
+            int tempStuId = 1;
+
             //create session
             Session session = getSession();
-
-            // create a student object
-            System.out.println("\nCreating new student object...");
-            Student student = new Student("Paul",
-                                            "Wall",
-                                        "paulwall@website.com");
 
             // start the transaction
             session.beginTransaction();
 
-            // save the student object
-            System.out.println("Saving the student...");
-            session.save(student);
+            // retrieve student based on the id: primary key
+            System.out.println("\nGetting student with id: " + tempStuId);
+            Student myStudent = session.get(Student.class, tempStuId);
+            System.out.println("Student retrieved: " + myStudent);
 
-            // commit transaction
+            // update the student info
+            System.out.println("\nUpdating the student...");
+            myStudent.setFirstName("Scooby");
+
+            // commit the transaction
             session.getTransaction().commit();
-            System.out.println("\nDone.\n");
 
             // close session
             session.close();
 
+            System.out.println("\nDone.\n");
 
         } finally {
             factory.close();

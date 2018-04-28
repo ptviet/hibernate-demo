@@ -1,13 +1,15 @@
 package com.stevenp.hibernate.demo;
 
 import com.stevenp.hibernate.entity.Student;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.HibernateException;
+
+import java.util.List;
 
 
-public class CreateStudent {
+public class QueryStudent {
 
     private static final SessionFactory factory;
 
@@ -33,18 +35,21 @@ public class CreateStudent {
             //create session
             Session session = getSession();
 
-            // create a student object
-            System.out.println("\nCreating new student object...");
-            Student student = new Student("Paul",
-                                            "Wall",
-                                        "paulwall@website.com");
-
             // start the transaction
             session.beginTransaction();
 
-            // save the student object
-            System.out.println("Saving the student...");
-            session.save(student);
+            // query students
+            List<Student> studentList = session.createQuery("from Student").list();
+
+            // display the students
+            displayStudents(studentList);
+
+            // query students: lastName='Doe'
+            studentList = session.createQuery("from Student s where s.lastName='Doe'").list();
+
+            // display the students
+            System.out.println("\nStudents who have last name of Doe: ");
+            displayStudents(studentList);
 
             // commit transaction
             session.getTransaction().commit();
@@ -53,10 +58,18 @@ public class CreateStudent {
             // close session
             session.close();
 
-
         } finally {
+
             factory.close();
         }
 
+    }
+
+    private static void displayStudents(List<Student> studentList) {
+        System.out.println("\nList of students: \n");
+        for(Student student: studentList) {
+            System.out.println(student);
+        }
+        System.out.println();
     }
 }

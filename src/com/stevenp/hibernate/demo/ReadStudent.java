@@ -7,7 +7,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.HibernateException;
 
 
-public class CreateStudent {
+public class ReadStudent {
 
     private static final SessionFactory factory;
 
@@ -30,29 +30,48 @@ public class CreateStudent {
     public static void main(String[] args) {
 
         try {
+
             //create session
             Session session = getSession();
 
             // create a student object
             System.out.println("\nCreating new student object...");
-            Student student = new Student("Paul",
-                                            "Wall",
-                                        "paulwall@website.com");
+            Student student = new Student("Daffy",
+                    "Duck",
+                    "daffyduck@website.com");
 
             // start the transaction
             session.beginTransaction();
 
             // save the student object
-            System.out.println("Saving the student...");
+            System.out.println("Saving the student: " + student);
             session.save(student);
 
             // commit transaction
             session.getTransaction().commit();
-            System.out.println("\nDone.\n");
+            System.out.println("Saved.");
+
+            // find the student's id: primary key
+            System.out.println("Generated id: " + student.getId());
 
             // close session
             session.close();
 
+            // get a new session and start transaction
+            session = getSession();
+            session.beginTransaction();
+
+            // retrieve student based on the id: primary key
+            System.out.println("\nGetting student with id: " + student.getId());
+            Student myStudent = session.get(Student.class, student.getId());
+            System.out.println("Student retrieved: " + myStudent);
+
+            // commit the transaction
+            session.getTransaction().commit();
+
+            // close session
+            session.close();
+            System.out.println("\nDone.\n");
 
         } finally {
             factory.close();
