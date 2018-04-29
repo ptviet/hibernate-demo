@@ -1,13 +1,16 @@
-package com.stevenp.hibernate.CrudDemo;
+package com.stevenp.hibernate.OneToMany;
 
-import com.stevenp.hibernate.CrudDemo.entity.Student;
+import com.stevenp.hibernate.OneToMany.entity.Course;
+import com.stevenp.hibernate.OneToMany.entity.Instructor;
+import com.stevenp.hibernate.OneToMany.entity.InstructorDetail;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.HibernateException;
 
 
-public class PrimaryKey {
+public class GetInstructorsCourses {
+
     private static final SessionFactory factory;
 
     //create session factory
@@ -16,7 +19,10 @@ public class PrimaryKey {
             Configuration configuration = new Configuration();
             configuration.configure("hibernate.cfg.xml");
 
-            factory = configuration.addAnnotatedClass(Student.class).buildSessionFactory();
+            factory = configuration.addAnnotatedClass(Instructor.class)
+                                    .addAnnotatedClass(InstructorDetail.class)
+                                    .addAnnotatedClass(Course.class)
+                                    .buildSessionFactory();
         } catch (Throwable ex) {
             throw new ExceptionInInitializerError(ex);
         }
@@ -32,26 +38,19 @@ public class PrimaryKey {
             //create session
             Session session = getSession();
 
-            // create 3 student objects
-            System.out.println("\nCreating 3 student objects...");
-            Student student1 = new Student("John",
-                    "Doe",
-                    "johndoe@website.com");
-            Student student2 = new Student("Marry",
-                    "Public",
-                    "marrypublic@website.com");
-            Student student3 = new Student("Bonita",
-                    "Applebum",
-                    "bonitaapplebum@website.com");
-
             // start the transaction
             session.beginTransaction();
 
-            // save the student object
-            System.out.println("Saving the students...");
-            session.save(student1);
-            session.save(student2);
-            session.save(student3);
+            // get the instructor from db
+            System.out.println("\nGetting instructor from db...");
+            int id = 1;
+            Instructor instructor = session.get(Instructor.class, id);
+
+            System.out.println("\nInstructor: " + instructor +"\n");
+
+            //  get course for the instructor
+            System.out.println("\nCourses: " + instructor.getCourseList() + "\n");
+
 
             // commit transaction
             session.getTransaction().commit();
@@ -60,11 +59,10 @@ public class PrimaryKey {
             // close session
             session.close();
 
-        } finally {
 
+        } finally {
             factory.close();
         }
 
     }
-
 }

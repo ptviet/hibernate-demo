@@ -1,12 +1,15 @@
-package com.stevenp.hibernate.OneToMany.entity;
+package com.stevenp.hibernate.CRUDdemo;
 
+import com.stevenp.hibernate.CRUDdemo.entity.Student;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import java.util.List;
 
-public class GetInstructorsCourses {
+
+public class QueryStudent {
 
     private static final SessionFactory factory;
 
@@ -16,10 +19,7 @@ public class GetInstructorsCourses {
             Configuration configuration = new Configuration();
             configuration.configure("hibernate.cfg.xml");
 
-            factory = configuration.addAnnotatedClass(Instructor.class)
-                                    .addAnnotatedClass(InstructorDetail.class)
-                                    .addAnnotatedClass(Course.class)
-                                    .buildSessionFactory();
+            factory = configuration.addAnnotatedClass(Student.class).buildSessionFactory();
         } catch (Throwable ex) {
             throw new ExceptionInInitializerError(ex);
         }
@@ -38,16 +38,18 @@ public class GetInstructorsCourses {
             // start the transaction
             session.beginTransaction();
 
-            // get the instructor from db
-            System.out.println("\nGetting instructor from db...");
-            int id = 1;
-            Instructor instructor = session.get(Instructor.class, id);
+            // query students
+            List<Student> studentList = session.createQuery("from Student").list();
 
-            System.out.println("\nInstructor: " + instructor +"\n");
+            // display the students
+            displayStudents(studentList);
 
-            //  get course for the instructor
-            System.out.println("\nCourses: " + instructor.getCourseList() + "\n");
+            // query students: lastName='Doe'
+            studentList = session.createQuery("from Student s where s.lastName='Doe'").list();
 
+            // display the students
+            System.out.println("\nStudents who have last name of Doe: ");
+            displayStudents(studentList);
 
             // commit transaction
             session.getTransaction().commit();
@@ -56,10 +58,18 @@ public class GetInstructorsCourses {
             // close session
             session.close();
 
-
         } finally {
+
             factory.close();
         }
 
+    }
+
+    private static void displayStudents(List<Student> studentList) {
+        System.out.println("\nList of students: \n");
+        for(Student student: studentList) {
+            System.out.println(student);
+        }
+        System.out.println();
     }
 }

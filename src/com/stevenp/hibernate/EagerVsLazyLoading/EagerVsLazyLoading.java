@@ -1,12 +1,13 @@
-package com.stevenp.hibernate.OneToMany.entity;
+package com.stevenp.hibernate.EagerVsLazyLoading;
 
+import com.stevenp.hibernate.EagerVsLazyLoading.entity.*;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 
-public class DeleteCourse {
+public class EagerVsLazyLoading {
 
     private static final SessionFactory factory;
 
@@ -38,20 +39,15 @@ public class DeleteCourse {
             // start the transaction
             session.beginTransaction();
 
-            // get the course from db
-            System.out.println("\nGetting course from db...");
-            int id = 11;
-            Course course = session.get(Course.class, id);
+            // get the instructor from db
+            System.out.println("\nGetting instructor from db...");
+            int id = 1;
+            Instructor instructor = session.get(Instructor.class, id);
 
-            System.out.println("\nCourse: " + course +"\n");
+            System.out.println("\nInstructor: " + instructor +"\n");
 
-            // delete the course
-            if (course != null) {
-                System.out.println("\nDeleting\n");
-                session.delete(course);
-            }
-            else
-                System.out.println("\nNo result found.\n");
+            //  get course for the instructor
+            System.out.println("\nCourses: " + instructor.getCourseList() + "\n");
 
 
             // commit transaction

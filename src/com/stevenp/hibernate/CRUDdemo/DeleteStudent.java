@@ -1,6 +1,6 @@
-package com.stevenp.hibernate.CrudDemo;
+package com.stevenp.hibernate.CRUDdemo;
 
-import com.stevenp.hibernate.CrudDemo.entity.Student;
+import com.stevenp.hibernate.CRUDdemo.entity.Student;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

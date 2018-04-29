@@ -1,12 +1,14 @@
-package com.stevenp.hibernate.OneToMany.entity;
+package com.stevenp.hibernate.EagerVsLazyLoading;
 
+import com.stevenp.hibernate.EagerVsLazyLoading.entity.*;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 
-public class CreateCourse {
+public class FetchJoin {
 
     private static final SessionFactory factory;
 
@@ -38,27 +40,27 @@ public class CreateCourse {
             // start the transaction
             session.beginTransaction();
 
+            // Hibernate query with HQL
+
             // get the instructor from db
             System.out.println("\nGetting instructor from db...");
             int id = 1;
-            Instructor instructor = session.get(Instructor.class, id);
 
+            Query<Instructor> query = session.createQuery("select i from Instructor i "
+                                                            + "JOIN FETCH i.courseList "
+                                                            + "where i.id=:theInstructorId",
+                                                        Instructor.class);
 
-            // create courses
-            System.out.println("\nCreating new courses...");
-            Course course1 = new Course("Air Guitar - The Ultimate Guide");
-            Course course2 = new Course("The Pinball Masterclass");
+            // set parameter on query
 
+            query.setParameter("theInstructorId", id);
 
-            // add courses to instructor
-            System.out.println("Adding courses to instructor...");
-            instructor.add(course1);
-            instructor.add(course2);
+            // execute query and get the instructor
 
-            // save the courses
-            System.out.println("Saving the courses to db...");
-            session.save(course1);
-            session.save(course2);
+            Instructor instructor = query.getSingleResult();
+
+            System.out.println("\nInstructor: " + instructor +"\n");
+
 
             // commit transaction
             session.getTransaction().commit();
@@ -66,6 +68,9 @@ public class CreateCourse {
 
             // close session
             session.close();
+
+            //  get course for the instructor
+            System.out.println("\nCourses: " + instructor.getCourseList() + "\n");
 
 
         } finally {
